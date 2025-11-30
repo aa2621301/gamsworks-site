@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ether Trade Limited - Integrated Growth System</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F7; /* Slightly cleaner grey */
+            color: #1A1A1A;
+        }
+        
+        /* Custom Animations */
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 30s linear infinite;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        /* Reveal Animation Classes */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(3rem);
+            transition: all 1s ease-out;
+        }
+        .reveal-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal Transitions */
+        .modal {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s linear 0.3s, opacity 0.3s;
+        }
+        .modal.open {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s;
+        }
+        .modal-content {
+            transform: scale(0.95) translateY(2.5rem);
+            transition: transform 0.3s ease-out;
+        }
+        .modal.open .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Accordion Transition */
+        .accordion-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .accordion-content.open {
+            max-height: 12rem;
+            opacity: 1;
+            padding-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="selection:bg-black selection:text-white overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 cursor-pointer z-50 group">
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-black via-gray-800 to-black"></div>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="relative z-10">
+                        <path d="M2 12h20M2 12l7-7M2 12l7 7"/>
+                        <path d="M16 5l5 7-5 7" stroke-opacity="0.5" />
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+                <button onclick="scrollToSection('synergy')" class="hover:text-black transition-colors relative group py-2">
+                    Why Synergy?
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button onclick="scrollToSection('capabilities')" class="hover:text-black transition-colors relative group py-2">
+                    Core Capabilities
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button onclick="scrollToSection('cases')" class="hover:text-black transition-colors relative group py-2">
+                    Success Stories
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button onclick="openModal('contact-modal')" class="hover:text-black transition-colors relative group py-2">
+                    Contact Us
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
+                </button>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="hidden md:flex items-center gap-4">
+                <button onclick="openModal('start-modal')" class="group relative bg-black text-white px-6 py-3 rounded-lg text-sm font-bold overflow-hidden shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+                    <span class="flex items-center gap-2 relative z-10">Start Growth</span>
+                </button>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button class="md:hidden z-50" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-[#F5F5F7] z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-300">
+            <button onclick="scrollToSection('synergy'); toggleMobileMenu()" class="text-3xl font-bold tracking-tight hover:text-gray-600 transition-colors">Why Synergy?</button>
+            <button onclick="scrollToSection('capabilities'); toggleMobileMenu()" class="text-3xl font-bold tracking-tight hover:text-gray-600 transition-colors">Core Capabilities</button>
+            <button onclick="scrollToSection('cases'); toggleMobileMenu()" class="text-3xl font-bold tracking-tight hover:text-gray-600 transition-colors">Success Stories</button>
+            <button onclick="openModal('contact-modal'); toggleMobileMenu()" class="text-3xl font-bold tracking-tight hover:text-gray-600 transition-colors">Contact Us</button>
+            <button onclick="openModal('start-modal'); toggleMobileMenu()" class="mt-8 bg-black text-white px-8 py-4 rounded-xl text-lg font-bold shadow-xl">Start Growth</button>
+        </div>
+    </nav>
+
+    <!-- Modals -->
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('contact-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-12 max-w-2xl w-full shadow-2xl border border-gray-100 overflow-y-auto max-h-[90vh]">
+            <button onclick="closeModal('contact-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-8">
+                <span class="text-2xl font-bold">Contact Us</span>
+            </div>
+            <div class="space-y-6 text-base md:text-lg text-gray-600 leading-relaxed">
+                <p>For business inquiries, partnership opportunities, or questions about our services, please feel free to reach out to us. Our team is ready to provide support.</p>
+                <p><span class="font-semibold text-black">Email: </span><a href="mailto:contact@brandkol.com" class="text-black font-medium hover:underline">contact@brandkol.com</a></p>
+            </div>
+            <div class="mt-10 pt-8 border-t border-gray-100 flex justify-end">
+                <button onclick="closeModal('contact-modal')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 hover:scale-105 transition-all">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Modal -->
+    <div id="start-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('start-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-12 max-w-lg w-full shadow-2xl border border-gray-100">
+            <button onclick="closeModal('start-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            
+            <div id="start-form-content">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-black rounded-full mb-6 shadow-lg">
+                        <i data-lucide="send" class="w-8 h-8 text-white ml-1"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Get Started</h2>
+                    <p class="text-gray-500">Accelerate your brand with our integrated system.</p>
+                </div>
+                <div class="text-center space-y-8">
+                    <p class="text-lg text-gray-600 leading-relaxed">Please enter your email below.<br/><br/><span class="font-medium text-black">We will contact you as soon as possible.</span></p>
+                    <div class="space-y-4">
+                        <input type="email" id="start-email" placeholder="name@company.com" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl text-lg focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all placeholder:text-gray-400">
+                        <button onclick="submitStartForm()" class="w-full bg-black text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-800 hover:scale-[1.02] transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 group">
+                            Submit Request <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success State (Hidden by default) -->
+            <div id="start-success" class="hidden text-center space-y-8 flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
+                    <i data-lucide="check" class="w-9 h-9 text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900">Request Submitted</h3>
+                    <p class="text-gray-600 mt-2">Thank you. We will contact you shortly.</p>
+                </div>
+                <button onclick="closeModal('start-modal')" class="bg-black text-white px-8 py-3 rounded-xl font-bold">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Modal (Updated Content) -->
+    <div id="privacy-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('privacy-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-12 max-w-3xl w-full shadow-2xl border border-gray-100 overflow-y-auto max-h-[85vh]">
+            <button onclick="closeModal('privacy-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-8">
+                <i data-lucide="shield-check" class="w-8 h-8 text-black"></i>
+                <span class="text-2xl font-bold">Privacy Policy</span>
+            </div>
+            <div class="space-y-6 text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-6">
+                 <p>This platform is committed to providing professional influencer marketing and SEO advertising services. To protect your personal data and legal rights, we have established this Privacy Policy in accordance with applicable laws and regulations. When you register an account, submit promotional materials, participate in influencer collaborations, or use analytics and advertising features, we may collect necessary information such as your contact details, account data, marketing content, usage behavior, device information, and system logs. Such information is used solely to deliver our services, improve platform performance, secure transactions, and fulfill regulatory obligations, and will not be used for unrelated purposes.</p>
+                <p>We may share certain information within a limited scope with influencers, partner agencies, or technical service providers when required to complete promotional campaigns, conduct analytics, or optimize advertising performance. Prior to any sharing, we assess the security and compliance of the process and require all partners to adhere to strict confidentiality standards. We do not disclose personal information to any third party unless required by law or authorized by you, and we never sell or misuse user data. The platform implements encryption, access control, and other security measures to prevent unauthorized access, misuse, or leakage of information, and data will be deleted or anonymized when retention is no longer necessary.</p>
+                <p>You have the right to request access, correction, or deletion of your personal information, as well as to withdraw your consent at any time. We will respond to your request within a reasonable timeframe. If this Privacy Policy is updated due to business or legal changes, we will notify you through public announcements. Should you have any questions or concerns about this policy, you may contact our customer support team at any time, and we will be pleased to assist you.</p>
+            </div>
+            <div class="mt-10 pt-8 border-t border-gray-100 flex justify-end">
+                <button onclick="closeModal('privacy-modal')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 hover:scale-105 transition-all">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal (Updated Content) -->
+    <div id="terms-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('terms-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-12 max-w-3xl w-full shadow-2xl border border-gray-100 overflow-y-auto max-h-[85vh]">
+            <button onclick="closeModal('terms-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-8">
+                <i data-lucide="file-text" class="w-8 h-8 text-black"></i>
+                <span class="text-2xl font-bold">Terms of Service</span>
+            </div>
+            <div class="space-y-6 text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-6">
+                <p>This platform provides influencer marketing, SEO advertising support, analytical services, and related digital marketing tools. By accessing, registering for, or using the platform, you agree to comply with these Terms of Service and all applicable local and international laws. You must ensure that the information you provide is accurate, lawful, and does not infringe upon the rights of any third party.</p>
+                <p>You may not use the platform for any activity that disrupts service integrity, compromises system security, or harms other users—including but not limited to fraudulent behavior, unauthorized automation, data scraping, distribution of harmful content, intellectual property infringement, or attempts to bypass platform restrictions. Any such behavior may result in the suspension or termination of your account without prior notice.</p>
+                <p>The platform may modify, update, or discontinue certain features due to business needs, security considerations, or legal requirements. We reserve the right to revise these Terms at any time. Updates will be communicated through reasonable means, and continued use of the platform constitutes acceptance of any revised Terms. It is your responsibility to review the Terms periodically.</p>
+                <p>If you disagree with any part of the updated Terms, you should stop using the platform immediately. All rights not expressly granted in these Terms are reserved by the platform.</p>
+            </div>
+            <div class="mt-10 pt-8 border-t border-gray-100 flex justify-end">
+                <button onclick="closeModal('terms-modal')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 hover:scale-105 transition-all">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Policy Modal (Updated Content) -->
+    <div id="cookie-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('cookie-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-12 max-w-3xl w-full shadow-2xl border border-gray-100 overflow-y-auto max-h-[85vh]">
+            <button onclick="closeModal('cookie-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-8">
+                <i data-lucide="cookie" class="w-8 h-8 text-black"></i>
+                <span class="text-2xl font-bold">Cookie Policy</span>
+            </div>
+            <div class="space-y-6 text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-6">
+                <p>Our platform uses cookies and similar technologies strictly within a limited and essential scope. These cookies are used to maintain session stability, authenticate users, store necessary functional preferences, and improve core platform usability. We do not use cookies for cross-site tracking, behavioral advertising, or the creation of personalized advertising profiles.</p>
+                <p>Cookies used by the platform fall into the following categories:<br/>(1) Essential Cookies, required for login sessions and core functionality.<br/>(2) Functional Cookies, used to store user settings and facilitate smoother navigation.<br/>We do not deploy analytical, marketing, or third-party advertising cookies.</p>
+                <p>Users may manage or disable cookies through their browser settings; however, disabling essential cookies may result in limited access or improper platform functionality. The platform is not responsible for disruptions caused by user-initiated cookie restrictions.</p>
+                <p>This Cookie Policy may be updated periodically to comply with evolving technical standards, data protection regulations, and platform development needs. Users are encouraged to review this Policy regularly.</p>
+            </div>
+            <div class="mt-10 pt-8 border-t border-gray-100 flex justify-end">
+                <button onclick="closeModal('cookie-modal')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 hover:scale-105 transition-all">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Safety Center Modal (Updated Content) -->
+    <div id="safety-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('safety-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-12 max-w-3xl w-full shadow-2xl border border-gray-100 overflow-y-auto max-h-[85vh]">
+            <button onclick="closeModal('safety-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-8">
+                <i data-lucide="shield-alert" class="w-8 h-8 text-black"></i>
+                <span class="text-2xl font-bold">Safety Center</span>
+            </div>
+            <div class="space-y-6 text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-6">
+                <p>We are committed to maintaining a secure, stable, and trustworthy environment for all users. Our platform employs multiple layers of security measures, including access control management, encryption protocols, behavioral monitoring systems, anti-spam protection, and automated threat detection mechanisms. These measures are designed to prevent unauthorized access, system abuse, data manipulation, and other harmful activities.</p>
+                <p>Users are responsible for safeguarding their account credentials, avoiding risky behaviors, and ensuring that their use of the platform does not introduce security threats. Sharing accounts, using compromised devices, or engaging in suspicious activities may lead to restricted access or account review.</p>
+                <p>If you encounter any potential threats—such as harmful content, suspicious messages, unauthorized activities, or vulnerabilities—you should report them to us immediately. The platform will investigate and take appropriate corrective or protective action.</p>
+                <p>Although we continuously improve system defenses, no digital service can guarantee absolute protection from all risks, including those arising from zero-day vulnerabilities, large-scale attacks, or external incidents beyond our control. By using the platform, you acknowledge these inherent limitations and agree to cooperate with platform security requirements.</p>
+            </div>
+            <div class="mt-10 pt-8 border-t border-gray-100 flex justify-end">
+                <button onclick="closeModal('safety-modal')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 hover:scale-105 transition-all">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Detail Modal (Generic) -->
+    <div id="service-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('service-modal')"></div>
+        <div class="modal-content relative bg-white rounded-3xl p-8 md:p-10 max-w-lg w-full shadow-2xl border border-gray-100">
+            <button onclick="closeModal('service-modal')" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group">
+                <i data-lucide="x" class="w-6 h-6 text-gray-500 group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-black">
+                    <i data-lucide="lightbulb" class="w-6 h-6"></i>
+                </div>
+                <h3 id="service-modal-title" class="text-2xl font-bold">Service Title</h3>
+            </div>
+            <p id="service-modal-desc" class="text-gray-600 text-lg leading-relaxed">Service Description</p>
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <button onclick="closeModal('service-modal')" class="w-full bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition-all hover:scale-[1.02]">Got it</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden min-h-screen flex items-center">
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center w-full">
+            <div class="relative z-10 order-2 lg:order-1">
+                <div class="reveal-element" style="transition-delay: 200ms;">
+                    <div class="inline-block bg-black/5 border border-black/5 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold mb-6 text-gray-700">
+                        <span class="mr-2 text-black">●</span> The Integrated Brand Acceleration System
+                    </div>
+                    <h1 class="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-8 text-[#1A1A1A]">
+                        Global Influencer Marketing <span class="text-gray-400">×</span><br/>
+                        SEO Performance.
+                    </h1>
+                </div>
+                
+                <div class="reveal-element" style="transition-delay: 300ms;">
+                    <p class="text-lg text-gray-600 mb-10 leading-relaxed max-w-lg font-medium">
+                        Transforming fragmented marketing into a unified growth engine. We combine the explosive reach of global influencers with the long-term capture of search intent.
+                    </p>
+                </div>
+
+                <div class="reveal-element" style="transition-delay: 400ms;">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="openModal('start-modal')" class="bg-black text-white px-8 py-4 rounded-xl font-bold text-base hover:bg-gray-800 transition-all hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 min-w-[180px] group">
+                            Start Growth <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button onclick="scrollToSection('synergy')" class="bg-white border border-gray-200 text-black px-8 py-4 rounded-xl font-bold text-base hover:bg-gray-50 transition-all hover:-translate-y-1">
+                            Explore the Synergy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Visual (Parallax) -->
+            <div class="relative h-[600px] w-full order-1 lg:order-2 hidden lg:block perspective-1000" id="hero-visual">
+                <div id="hero-img-main" class="absolute right-0 top-0 w-[90%] h-[95%] rounded-[2rem] overflow-hidden shadow-2xl bg-gray-200 transition-transform duration-100 ease-out">
+                    <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1000" alt="Professional Woman" class="w-full h-full object-cover object-top grayscale-[10%]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+
+                <!-- Floating Card 1 -->
+                <div id="hero-card-1" class="absolute top-[10%] left-[5%] bg-white p-5 rounded-2xl shadow-2xl w-48 border border-gray-100 transition-transform duration-100 ease-out z-20">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Reach</span>
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    </div>
+                    <div class="text-3xl font-bold text-black mb-2">150M+</div>
+                    <div class="text-[10px] text-gray-400">Audience Capacity</div>
+                </div>
+
+                 <!-- Floating Card 3 -->
+                <div id="hero-card-3" class="absolute bottom-[15%] -right-8 bg-black p-5 rounded-2xl shadow-2xl w-56 border border-gray-800 transition-transform duration-100 ease-out z-20">
+                    <div class="flex items-center gap-4 mb-4">
+                         <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-bold text-xs">SEO</div>
+                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black font-bold text-xs">+</div>
+                         <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-bold text-xs">KOL</div>
+                    </div>
+                    <div class="text-white text-sm font-bold tracking-wider">Unified Growth</div>
+                    <div class="w-full bg-gray-800 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-white h-full w-[85%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BRAND TICKER -->
+    <div class="py-12 border-y border-gray-200 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="relative w-full overflow-hidden">
+                <div class="flex gap-16 items-center whitespace-nowrap animate-marquee">
+                    <div class="flex gap-16 items-center">
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">ECOMMERCE</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">BEAUTY & COSMETICS</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">GAMING</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">CONSUMER TECH</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">FINTECH</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">SAAS</span>
+                    </div>
+                     <div class="flex gap-16 items-center">
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">ECOMMERCE</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">BEAUTY & COSMETICS</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">GAMING</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">CONSUMER TECH</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">FINTECH</span>
+                        <span class="text-lg md:text-xl font-bold text-black opacity-30 tracking-widest">SAAS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: SYNERGY SECTION -->
+    <section id="synergy" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal-element">
+            <h2 class="text-4xl font-bold text-[#1A1A1A] mb-6">Influencer × SEO Synergy</h2>
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                Stop treating them as separate channels. We build a self-reinforcing loop where social buzz drives search demand, and SEO captures the value.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 relative">
+            <!-- Connecting Line (Desktop) -->
+            <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 -z-10 -translate-y-1/2"></div>
+
+            <!-- Step 1 -->
+            <div class="reveal-element bg-white p-8 rounded-3xl border border-gray-100 shadow-lg text-center relative" style="transition-delay: 100ms;">
+                <div class="w-16 h-16 mx-auto bg-black text-white rounded-2xl flex items-center justify-center mb-6 text-2xl font-bold shadow-xl">1</div>
+                <h3 class="text-xl font-bold mb-3">Ignite Demand</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Influencers create authentic content that builds trust and triggers immediate brand awareness across social platforms.
+                </p>
+                <div class="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gray-50 px-3 py-1 rounded">
+                    <i data-lucide="zap" class="w-3 h-3"></i> Social Buzz
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="reveal-element bg-white p-8 rounded-3xl border border-gray-100 shadow-lg text-center relative" style="transition-delay: 200ms;">
+                <div class="w-16 h-16 mx-auto bg-white border-2 border-black text-black rounded-2xl flex items-center justify-center mb-6 text-2xl font-bold shadow-xl">2</div>
+                <h3 class="text-xl font-bold mb-3">Capture Intent</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Users search for your brand. Our SEO strategies ensure your optimized content and landing pages dominate the search results.
+                </p>
+                <div class="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gray-50 px-3 py-1 rounded">
+                    <i data-lucide="search" class="w-3 h-3"></i> Search Rankings
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="reveal-element bg-white p-8 rounded-3xl border border-gray-100 shadow-lg text-center relative" style="transition-delay: 300ms;">
+                <div class="w-16 h-16 mx-auto bg-black text-white rounded-2xl flex items-center justify-center mb-6 text-2xl font-bold shadow-xl">3</div>
+                <h3 class="text-xl font-bold mb-3">Amplify & Convert</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    We use retargeting ads and high-ranking content to convert this intent into sales, maximizing ROI from the initial influencer spark.
+                </p>
+                <div class="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gray-50 px-3 py-1 rounded">
+                    <i data-lucide="trending-up" class="w-3 h-3"></i> Growth Loop
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE CAPABILITIES (Unified Style) -->
+    <section id="capabilities" class="py-24 bg-white border-y border-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16 reveal-element text-center md:text-left">
+                <h2 class="text-4xl font-bold mb-4 text-[#1A1A1A]">Core Capabilities</h2>
+                <p class="text-gray-600 text-lg">Four pillars of our professional execution system.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="reveal-element h-full" style="transition-delay: 100ms;">
+                    <div class="bg-gray-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 h-full flex flex-col">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+                            <i data-lucide="users" class="w-6 h-6 text-black"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Elite Network</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-grow">
+                            Access to 50k+ vetted creators across tier-1 markets. Our AI matching analyzes audience authenticity, engagement rates, and brand fit.
+                        </p>
+                        <button onclick="openServiceDetail('Influencer Sourcing', 'We leverage advanced data analytics to identify and recruit high-performing creators who authentically resonate with your brand.')" class="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 w-fit">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="reveal-element h-full" style="transition-delay: 200ms;">
+                    <div class="bg-gray-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 h-full flex flex-col">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+                            <i data-lucide="file-text" class="w-6 h-6 text-black"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Search-First Content</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-grow">
+                            We optimize influencer briefs and landing pages with high-value keywords, ensuring every piece of content contributes to your long-term SEO authority.
+                        </p>
+                        <button onclick="openServiceDetail('SEO Growth', 'Transform ephemeral social buzz into enduring search assets. We optimize digital content for sustained organic visibility.')" class="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 w-fit">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="reveal-element h-full" style="transition-delay: 300ms;">
+                    <div class="bg-gray-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 h-full flex flex-col">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+                            <i data-lucide="target" class="w-6 h-6 text-black"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Precision Ads</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-grow">
+                            Amplify top-performing influencer content with Google & Meta Ads. We manage SEM campaigns to capture the traffic spike generated by social buzz.
+                        </p>
+                        <button onclick="openServiceDetail('Google/Meta Ads', 'Amplify your top-performing influencer content through precision-targeted paid media campaigns.')" class="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 w-fit">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="reveal-element h-full" style="transition-delay: 400ms;">
+                    <div class="bg-gray-50 p-8 rounded-[2rem] hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 h-full flex flex-col">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+                            <i data-lucide="bar-chart-2" class="w-6 h-6 text-black"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Data Intelligence</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-grow">
+                            Full-funnel analytics tracking impressions, clicks, search volume lift, and conversions. We provide a transparent view of your unified ROI.
+                        </p>
+                        <button onclick="openServiceDetail('Data Analytics', 'Full visibility into your campaign performance with real-time dashboards tracking ROI, engagement, and search lift.')" class="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 w-fit">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFLUENCER GALLERY -->
+    <section id="influencers" class="py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-12 reveal-element">
+            <h2 class="text-3xl font-bold text-[#1A1A1A]">Verified Creator Network</h2>
+            <p class="text-gray-500 mt-2">Connecting you with creators who drive both engagement and search intent.</p>
+        </div>
+        
+        <div class="flex gap-6 overflow-x-auto pb-8 px-6 snap-x max-w-7xl mx-auto no-scrollbar">
+            <!-- Item 1 -->
+            <div class="min-w-[280px] h-[380px] relative rounded-2xl overflow-hidden group cursor-pointer snap-center shadow-md bg-gray-200 hover:shadow-2xl transition-all duration-500">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0" alt="Fashion">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-5 left-5 text-white">
+                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 block opacity-90 bg-black/40 backdrop-blur-sm w-fit px-2 py-1 rounded border border-white/10">Fashion</span>
+                    <h4 class="text-xl font-bold mb-1 shadow-sm">@Lisa***</h4>
+                    <div class="flex items-center gap-2 text-sm font-medium text-gray-200"><i data-lucide="instagram" class="w-3 h-3"></i> 12k Followers</div>
+                </div>
+            </div>
+            <!-- Item 2 -->
+             <div class="min-w-[280px] h-[380px] relative rounded-2xl overflow-hidden group cursor-pointer snap-center shadow-md bg-gray-200 hover:shadow-2xl transition-all duration-500">
+                <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0" alt="Tech">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-5 left-5 text-white">
+                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 block opacity-90 bg-black/40 backdrop-blur-sm w-fit px-2 py-1 rounded border border-white/10">Tech Reviews</span>
+                    <h4 class="text-xl font-bold mb-1 shadow-sm">@Tech***</h4>
+                    <div class="flex items-center gap-2 text-sm font-medium text-gray-200"><i data-lucide="youtube" class="w-3 h-3"></i> 30k Subscribers</div>
+                </div>
+            </div>
+            <!-- Item 3 -->
+             <div class="min-w-[280px] h-[380px] relative rounded-2xl overflow-hidden group cursor-pointer snap-center shadow-md bg-gray-200 hover:shadow-2xl transition-all duration-500">
+                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0" alt="Food">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-5 left-5 text-white">
+                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 block opacity-90 bg-black/40 backdrop-blur-sm w-fit px-2 py-1 rounded border border-white/10">Food</span>
+                    <h4 class="text-xl font-bold mb-1 shadow-sm">@Foodie***</h4>
+                    <div class="flex items-center gap-2 text-sm font-medium text-gray-200"><i data-lucide="play" class="w-3 h-3"></i> 85k Followers</div>
+                </div>
+            </div>
+             <!-- Item 4 -->
+             <div class="min-w-[280px] h-[380px] relative rounded-2xl overflow-hidden group cursor-pointer snap-center shadow-md bg-gray-200 hover:shadow-2xl transition-all duration-500">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0" alt="Gaming">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-5 left-5 text-white">
+                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 block opacity-90 bg-black/40 backdrop-blur-sm w-fit px-2 py-1 rounded border border-white/10">Gaming</span>
+                    <h4 class="text-xl font-bold mb-1 shadow-sm">@Game***</h4>
+                    <div class="flex items-center gap-2 text-sm font-medium text-gray-200"><i data-lucide="twitch" class="w-3 h-3"></i> 18k Followers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CASE STUDIES (Updated Text) -->
+    <section id="cases" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="reveal-element">
+            <h2 class="text-3xl font-bold text-[#1A1A1A] mb-12 text-center">Proven Synergistic Results</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Case 1 -->
+                <div class="bg-white rounded-[2.5rem] py-12 px-10 border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+                    <div class="mb-auto">
+                        <div class="inline-block bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-sm font-bold mb-8 text-gray-600">
+                            Case 1: Beauty Brand Growth
+                        </div>
+                        <h3 class="text-4xl md:text-5xl font-bold mb-4 leading-tight text-[#1A1A1A]">
+                            +<span class="count-up" data-target="230">0</span>% GMV <br/>
+                            <span class="text-xl md:text-2xl text-gray-400 font-normal mt-2 block">in 30 Days</span>
+                        </h3>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                            <strong>Strategy:</strong> Deployed 10 mid-tier influencers to generate buzz, while capturing the surge with SEO-optimized landing pages and retargeting ads.
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <div class="h-px w-full bg-gray-100 mb-8"></div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <div class="text-2xl font-bold text-black flex items-center gap-1">
+                                    +<span class="count-up" data-target="400">0</span>%
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-semibold">Organic Traffic</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-black flex items-center gap-1">
+                                    x<span class="count-up" data-target="3">0</span>
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-semibold">Brand Search Vol</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="bg-white rounded-[2.5rem] py-12 px-10 border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+                    <div class="mb-auto">
+                        <div class="inline-block bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-sm font-bold mb-8 text-gray-600">
+                            Case 2: Tech Brand
+                        </div>
+                        <h3 class="text-4xl md:text-5xl font-bold mb-4 leading-tight text-[#1A1A1A]">
+                            <span class="count-up" data-target="5">0</span>.2M+ <br/>
+                            <span class="text-xl md:text-2xl text-gray-400 font-normal mt-2 block">Monthly Exposure</span>
+                        </h3>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                            <strong>Strategy:</strong> YouTube tech reviewers created in-depth content. We optimized video descriptions for SEO and ran Google Shopping ads to close sales.
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="h-px w-full bg-gray-100 mb-8"></div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <div class="text-2xl font-bold text-black flex items-center gap-1">
+                                    +<span class="count-up" data-target="37">0</span>%
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-semibold">Conversion Rate</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-black flex items-center gap-1">
+                                    #<span class="count-up" data-target="1">0</span>
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-semibold">Keyword Ranking</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GLOBAL REACH -->
+    <section id="global" class="bg-[#050505] py-24 px-6 text-white relative overflow-hidden">
+        <div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-500/30 to-transparent bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="reveal-element">
+                <div class="text-center max-w-3xl mx-auto mb-20">
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Global Reach & <br/> Cross-Market Expansion</h2>
+                    <p class="text-gray-400 text-lg">Covering mature and high-growth markets around the world.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <!-- Stat 1 -->
+                <div class="reveal-element" style="transition-delay: 100ms;">
+                    <div class="bg-white/5 backdrop-blur-sm p-8 rounded-full aspect-square flex flex-col items-center justify-center border border-blue-500/30 hover:scale-105 transition-transform duration-500 group relative">
+                        <div class="mb-4 p-3 bg-white/10 rounded-full group-hover:rotate-12 transition-transform duration-300"><i data-lucide="globe" class="w-6 h-6 text-blue-400"></i></div>
+                        <div class="text-4xl font-bold mb-2 tracking-tighter"><span class="count-up" data-target="35">0</span>+</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest text-center max-w-[120px]">Target Markets</div>
+                    </div>
+                </div>
+                 <!-- Stat 2 -->
+                 <div class="reveal-element" style="transition-delay: 200ms;">
+                    <div class="bg-white/5 backdrop-blur-sm p-8 rounded-full aspect-square flex flex-col items-center justify-center border border-purple-500/30 hover:scale-105 transition-transform duration-500 group relative">
+                        <div class="mb-4 p-3 bg-white/10 rounded-full group-hover:rotate-12 transition-transform duration-300"><i data-lucide="users" class="w-6 h-6 text-purple-400"></i></div>
+                        <div class="text-4xl font-bold mb-2 tracking-tighter"><span class="count-up" data-target="50">0</span>k+</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest text-center max-w-[120px]">Vetted Creators</div>
+                    </div>
+                </div>
+                 <!-- Stat 3 -->
+                 <div class="reveal-element" style="transition-delay: 300ms;">
+                    <div class="bg-white/5 backdrop-blur-sm p-8 rounded-full aspect-square flex flex-col items-center justify-center border border-pink-500/30 hover:scale-105 transition-transform duration-500 group relative">
+                        <div class="mb-4 p-3 bg-white/10 rounded-full group-hover:rotate-12 transition-transform duration-300"><i data-lucide="languages" class="w-6 h-6 text-pink-400"></i></div>
+                        <div class="text-4xl font-bold mb-2 tracking-tighter"><span class="count-up" data-target="12">0</span>+</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest text-center max-w-[120px]">Languages</div>
+                    </div>
+                </div>
+                 <!-- Stat 4 -->
+                 <div class="reveal-element" style="transition-delay: 400ms;">
+                    <div class="bg-white/5 backdrop-blur-sm p-8 rounded-full aspect-square flex flex-col items-center justify-center border border-cyan-500/30 hover:scale-105 transition-transform duration-500 group relative">
+                        <div class="mb-4 p-3 bg-white/10 rounded-full group-hover:rotate-12 transition-transform duration-300"><i data-lucide="trending-up" class="w-6 h-6 text-cyan-400"></i></div>
+                        <div class="text-4xl font-bold mb-2 tracking-tighter"><span class="count-up" data-target="10">0</span>M+</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest text-center max-w-[120px]">Monthly Reach</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16 reveal-element">
+            <h2 class="text-3xl font-bold text-[#1A1A1A] mb-4">Trusted by Industry Leaders</h2>
+            <p class="text-gray-600">See what our partners have to say about their growth.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="reveal-element" style="transition-delay: 0ms;">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+                    <i data-lucide="quote" class="w-8 h-8 mb-6 opacity-20 text-black"></i>
+                    <p class="text-lg font-medium mb-6 leading-relaxed text-gray-600">"This platform transformed our product launch. The SEO impact lasted months after the campaign ended."</p>
+                    <div class="font-bold">Sarah J***</div>
+                </div>
+            </div>
+            <div class="reveal-element" style="transition-delay: 100ms;">
+                <div class="bg-black text-white p-8 rounded-3xl shadow-sm border border-gray-100 relative flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+                    <i data-lucide="quote" class="w-8 h-8 mb-6 opacity-20 text-white"></i>
+                    <p class="text-lg font-medium mb-6 leading-relaxed text-gray-300">"The AI matching is incredibly accurate. We saved weeks of manual vetting time."</p>
+                    <div class="font-bold">David C***</div>
+                </div>
+            </div>
+            <div class="reveal-element" style="transition-delay: 200ms;">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+                    <i data-lucide="quote" class="w-8 h-8 mb-6 opacity-20 text-black"></i>
+                    <p class="text-lg font-medium mb-6 leading-relaxed text-gray-600">"A true full-stack solution. From influencer sourcing to technical SEO, they handled it all."</p>
+                    <div class="font-bold">Elena R***</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-24 px-6 max-w-4xl mx-auto">
+        <div class="reveal-element">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#1A1A1A]">Brand Support FAQs</h2>
+        </div>
+        <div class="space-y-4">
+            <!-- FAQ Item 1 -->
+            <div class="reveal-element bg-white rounded-2xl overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-md">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-6 text-left font-bold text-lg md:text-xl focus:outline-none">
+                    What is the "Integrated Growth System"?
+                    <i data-lucide="plus" class="w-5 h-5 flex-shrink-0 transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content px-6 text-gray-600 leading-relaxed">
+                    It is our proprietary methodology that combines Influencer Marketing with SEO. Instead of running these as separate silos, we use influencer content to drive search demand and use SEO technical strategies to capture that traffic, ensuring you get both immediate buzz and long-term organic growth.
+                </div>
+            </div>
+            <!-- FAQ Item 2 -->
+             <div class="reveal-element bg-white rounded-2xl overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-md">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-6 text-left font-bold text-lg md:text-xl focus:outline-none">
+                    How do you select influencers?
+                    <i data-lucide="plus" class="w-5 h-5 flex-shrink-0 transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content px-6 text-gray-600 leading-relaxed">
+                    We use a rigorous AI-driven screening process. We evaluate creators based on audience authenticity, engagement rates, content quality, and historical performance data. Our network includes over 50,000 vetted creators across key global markets.
+                </div>
+            </div>
+             <!-- FAQ Item 3 -->
+             <div class="reveal-element bg-white rounded-2xl overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-md">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-6 text-left font-bold text-lg md:text-xl focus:outline-none">
+                    Do you offer SEO services along with influencers?
+                    <i data-lucide="plus" class="w-5 h-5 flex-shrink-0 transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content px-6 text-gray-600 leading-relaxed">
+                     Yes, this is our core differentiator. We don't just post content; we optimize the underlying metadata, keywords, and backlink structures of influencer campaigns to turn ephemeral social buzz into evergreen search assets.
+                </div>
+            </div>
+            <!-- FAQ Item 4 -->
+            <div class="reveal-element bg-white rounded-2xl overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-md">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-6 text-left font-bold text-lg md:text-xl focus:outline-none">
+                    How is campaign performance measured?
+                    <i data-lucide="plus" class="w-5 h-5 flex-shrink-0 transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content px-6 text-gray-600 leading-relaxed">
+                    We prioritize tangible ROI over vanity metrics. You will gain access to a comprehensive dashboard that tracks real-time data—including conversions, click-through rates (CTR), and keyword ranking improvements—giving you full transparency into your success.
+                </div>
+            </div>
+            <!-- FAQ Item 5 -->
+            <div class="reveal-element bg-white rounded-2xl overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-md">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-6 text-left font-bold text-lg md:text-xl focus:outline-none">
+                    Do you handle content usage rights?
+                    <i data-lucide="plus" class="w-5 h-5 flex-shrink-0 transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content px-6 text-gray-600 leading-relaxed">
+                    Yes, we manage all negotiations to secure necessary commercial usage rights. This allows you to repurpose high-performing influencer content across your own paid ads, website, and social channels to maximize the value of every creative asset.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT US (Enhanced) -->
+    <section id="about" class="py-24 px-6 max-w-7xl mx-auto text-center relative overflow-hidden">
+        <div class="reveal-element relative z-10 max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 mb-8">
+                <i data-lucide="map-pin" class="w-4 h-4 text-red-500"></i>
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-500">HQ: Hong Kong</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold leading-tight text-[#1A1A1A] mb-8">About Us</h2>
+            <div class="text-lg text-gray-600 leading-relaxed mb-12 space-y-6 text-left md:text-center">
+                <p>We are a Hong Kong–registered digital growth agency redefining how brands scale globally. By fusing a network of <strong>50,000+ vetted influencers</strong> with an elite <strong>technical SEO team</strong>, we bridge the gap between social engagement and search intent.</p>
+                <p>Our expertise spans core markets including North America, Europe, and Southeast Asia. We don't just run campaigns; we build sustainable digital assets for your brand, ensuring every marketing dollar contributes to long-term authority and revenue.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#1A1A1A] text-gray-400 py-16 border-t border-white/5 text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Brand -->
+                <div class="lg:col-span-1">
+                    <a href="#" class="flex items-center gap-2 mb-6 text-white group">
+                        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-bold">Global Solutions</span>
+                    </a>
+                    <p class="text-xs leading-relaxed mb-6 opacity-70">Empowering brands with data-driven influencer marketing and SEO performance strategies.</p>
+                </div>
+
+                <!-- Navigation -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Navigation</h4>
+                    <ul class="space-y-3 text-xs">
+                        <li><button onclick="scrollToSection('synergy')" class="hover:text-white transition-colors text-left">Why Synergy?</button></li>
+                        <li><button onclick="scrollToSection('capabilities')" class="hover:text-white transition-colors text-left">Core Capabilities</button></li>
+                        <li><button onclick="scrollToSection('cases')" class="hover:text-white transition-colors text-left">Success Stories</button></li>
+                        <li><button onclick="openModal('contact-modal')" class="hover:text-white transition-colors text-left">Contact Us</button></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Support</h4>
+                    <ul class="space-y-3 text-xs">
+                        <li><button onclick="scrollToSection('faq')" class="hover:text-white transition-colors text-left">FAQ</button></li>
+                        <li><button onclick="openModal('privacy-modal')" class="hover:text-white transition-colors text-left">Privacy Policy</button></li>
+                        <li><button onclick="openModal('terms-modal')" class="hover:text-white transition-colors text-left">Terms of Service</button></li>
+                        <li><button onclick="openModal('cookie-modal')" class="hover:text-white transition-colors text-left">Cookie Policy</button></li>
+                        <li><button onclick="openModal('safety-modal')" class="hover:text-white transition-colors text-left">Safety Center</button></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Stay in the Loop</h4>
+                    <p class="text-xs opacity-70 mb-4">Join the inner circle.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Enter email" class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs w-full focus:outline-none focus:border-white/30 text-white placeholder-gray-600 transition-colors"/>
+                        <button class="bg-white text-black rounded-lg px-3 py-2 hover:bg-gray-200 transition-colors"><i data-lucide="arrow-right" class="w-3 h-3"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-500">
+                <p>© 2025 brandkol.com. All Rights Reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0 items-center">
+                    <i data-lucide="globe" class="w-3 h-3"></i>
+                    <span>English (US)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic (Same as before) -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. Navigation Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-[#F5F5F7]/90', 'backdrop-blur-md', 'shadow-sm', 'py-4');
+                navbar.classList.remove('py-6', 'bg-transparent');
+            } else {
+                navbar.classList.add('py-6', 'bg-transparent');
+                navbar.classList.remove('bg-[#F5F5F7]/90', 'backdrop-blur-md', 'shadow-sm', 'py-4');
+            }
+        });
+
+        // 2. Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        function toggleMobileMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        // 3. Smooth Scrolling
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                const headerOffset = 100;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }
+
+        // 4. Modal Logic
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('open');
+            // Reset start modal form if opening it
+            if(modalId === 'start-modal') {
+                document.getElementById('start-form-content').classList.remove('hidden');
+                document.getElementById('start-success').classList.add('hidden');
+                document.getElementById('start-email').value = '';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('open');
+        }
+
+        // Service Modal Helper
+        function openServiceDetail(title, desc) {
+            document.getElementById('service-modal-title').innerText = title;
+            document.getElementById('service-modal-desc').innerText = desc;
+            openModal('service-modal');
+        }
+
+        // Start Form Submit
+        function submitStartForm() {
+            const email = document.getElementById('start-email').value;
+            if(email.trim() !== "") {
+                document.getElementById('start-form-content').classList.add('hidden');
+                document.getElementById('start-success').classList.remove('hidden');
+            }
+        }
+
+        // 5. Accordion Logic
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('svg');
+            
+            // Close others (optional - standard accordion behavior)
+            document.querySelectorAll('.accordion-content').forEach(c => {
+                if(c !== content) {
+                    c.classList.remove('open');
+                }
+            });
+
+            content.classList.toggle('open');
+            if(content.classList.contains('open')){
+               icon.style.transform = 'rotate(45deg)'; 
+            } else {
+               icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // 6. Reveal on Scroll (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-element').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // 7. Number Count Up Animation
+        const countUpObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.getAttribute('data-target'));
+                    animateValue(entry.target, 0, target, 2000);
+                    countUpObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.count-up').forEach(el => {
+            countUpObserver.observe(el);
+        });
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 4); // EaseOutQuart
+                obj.innerHTML = Math.floor(easeProgress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    obj.innerHTML = end;
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // 8. Hero Mouse Parallax Effect
+        const heroSection = document.getElementById('home');
+        const heroImg = document.getElementById('hero-img-main');
+        const card1 = document.getElementById('hero-card-1');
+        const card3 = document.getElementById('hero-card-3');
+
+        if(window.innerWidth > 1024) { // Only on desktop
+            heroSection.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) * 2 - 1;
+                const y = (e.clientY / window.innerHeight) * 2 - 1;
+
+                if(heroImg) heroImg.style.transform = `translate(${x * -10}px, ${y * -10}px)`;
+                if(card1) card1.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+                if(card3) card3.style.transform = `translate(${x * 25}px, ${y * 30}px)`;
+            });
+        }
+    </script>
+</body>
+</html>
