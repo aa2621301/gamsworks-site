@@ -1060,22 +1060,24 @@
         }
     </script>
                 <script>
-  function subscribeNewsletter() {
+function subscribeNewsletter() {
     var input = document.getElementById('newsletter-email');
     var email = (input.value || '').trim();
 
     if (!email) {
-      alert('请输入邮箱地址');
-      return;
+        alert('Please enter your email address.');
+        return;
     }
 
-    alert('感谢订阅：' + email + '（当前为演示站点，不会保存您的邮箱信息）');
+    alert('Thank you for subscribing!');
 
     input.value = '';
-  }
+}
+
 </script>
 
 </body>
 
 </html>
+
 
